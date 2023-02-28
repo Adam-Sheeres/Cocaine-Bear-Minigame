@@ -21,6 +21,18 @@ public class PlayerStatus : MonoBehaviour
         healthBar.SetMaxHealth(healthPoints);
     }
 
+    public void sendMessage(string message)
+    {
+        if (message == "powerup")
+        {
+            cocainePoints += 50.0f;
+            Debug.Log("Got powerup! Cocaine points: " + cocainePoints);
+        }
+        else
+        {
+            Debug.Log("Unknown message: " + message);
+        }
+    }
     private void Update()
     {
         // Decrease the cocaine meter over time.
