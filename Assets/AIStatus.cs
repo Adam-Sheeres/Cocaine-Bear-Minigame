@@ -15,4 +15,14 @@ public class AIStatus : MonoBehaviour
     {
         
     }
+
+    void sendMessage(string message, int value)
+    {
+        switch (message) {
+            case "take damage":
+                healthPoints -= value;
+                break;
+        }
+        
+    }
 }

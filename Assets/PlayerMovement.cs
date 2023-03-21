@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("Idle", true);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         MyInput();
@@ -47,12 +47,16 @@ public class PlayerMovement : MonoBehaviour
         if (grounded)
         {
             rb.drag = groundDrag;
-        } else
+            animator.SetBool("Jumping", false);
+        } else 
         {
             rb.drag = 0;
         }
+
         MovePlayer();
+
     }
+
 
 
     private void MyInput()
@@ -66,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
 
             Jump();
 
-            Invoke(nameof(resetJump), jumpCooldown);
+            Invoke(nameof(resetJump), jumpCooldown); //jump cooldown
         }
     }
 
@@ -111,7 +115,8 @@ public class PlayerMovement : MonoBehaviour
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
 
-        animator.SetTrigger("Jump");
+        animator.SetBool("Jumping", true);
+        Debug.Log("Jumping");
     }
 
     private IEnumerator ResetTriggerAfterDelay(string triggerName, float delay)
@@ -123,5 +128,6 @@ public class PlayerMovement : MonoBehaviour
     private void resetJump()
     {
         readyToJump = true;
+        animator.SetBool("Jumping", false);
     }
 }
