@@ -15,10 +15,11 @@ public class AIStatus : MonoBehaviour
         
     }
 
-    void sendMessage(string message, int value)
+    public void sendMessage(string message, int value)
     {
         switch (message) {
             case "take damage":
+                Debug.Log("Taking Damage " + value.ToString());
                 healthPoints -= value;
                 break;
         }

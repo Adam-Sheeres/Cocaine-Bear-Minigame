@@ -800,7 +800,7 @@ GameObject:
   - component: {fileID: 121712150}
   m_Layer: 0
   m_Name: NPC 1
-  m_TagString: Untagged
+  m_TagString: Enemies
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15283,6 +15283,7 @@ GameObject:
   - component: {fileID: 1577730615}
   - component: {fileID: 1577730617}
   - component: {fileID: 1577730619}
+  - component: {fileID: 1577730620}
   m_Layer: 0
   m_Name: Bear
   m_TagString: Player
@@ -15349,6 +15350,7 @@ MonoBehaviour:
     m_Bits: 8
   orientation: {fileID: 1137682958}
   animator: {fileID: 1376740858}
+  attackRange: {fileID: 1577730620}
 --- !u!135 &1577730618
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -15380,6 +15382,19 @@ MonoBehaviour:
   cocaineDecreaseRate: 5
   sleepThreshold: 0
   cocaineBar: {fileID: 1310206195}
+--- !u!135 &1577730620
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577730614}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1583045646
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17316,7 +17331,7 @@ GameObject:
   - component: {fileID: 1757991652}
   m_Layer: 0
   m_Name: NPC 2
-  m_TagString: Untagged
+  m_TagString: Enemies
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

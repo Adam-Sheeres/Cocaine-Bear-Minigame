@@ -19,12 +19,13 @@ public class AIStateMachineAggressive : MonoBehaviour
     void Start()
     {
         target = transform.position + new Vector3(0, 0, distance); // set initial target position
+        takeActionFromState(State.idle);
     }
 
     void Update()
     {
         State state;
-        state = State.idle;
+
 
         //can see and not within the minimum attack radius, OK to attack 
         if (inDetectionRadius() && !inAttackRadius())
@@ -34,6 +35,9 @@ public class AIStateMachineAggressive : MonoBehaviour
         } else if (inDetectionRadius() && inAttackRadius())
         {
             state = State.runAway;
+        } else
+        {
+            state = State.idle;
         }
 
         takeActionFromState(state);

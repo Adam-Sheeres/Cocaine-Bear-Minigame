@@ -18,10 +18,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded; 
+    bool grounded;
 
+    [Header("Other")]
     public Transform orientation;
     public Animator animator;
+    public SphereCollider attackRange;
 
     float hInput;
     float vInput;
@@ -48,30 +50,74 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.drag = groundDrag;
             animator.SetBool("Jumping", false);
-        } else 
+        }
+        else
         {
             rb.drag = 0;
         }
 
+
+
+
+
         if (Input.GetButton("Fire1"))
         {
-            // Run some code while the left mouse button is being held down
-            animator.SetBool("Idle", true);
-            animator.SetBool("Run Forward", false);
+            animator.SetBool("Attack", true);
 
+            GameObject closestEnemy = getClosestEnemy();
 
-            //set the animation to attack 
-
-            //also need to do damage to the enemy, so need to find closest enemy 
-
-            Debug.Log("Left mouse button is being held down");
-        } else
+            //if in range 
+            if (IsEnemyInAttackRange(closestEnemy.transform, attackRange))
+            {
+                AIStatus aiStatus = closestEnemy.GetComponent<AIStatus>();
+                aiStatus.sendMessage("take damage", 1);
+            }
+        }
+        else
         {
+            animator.SetBool("Attack", false);
             MovePlayer();
         }
+    }
 
 
+    bool IsEnemyInAttackRange(Transform closestEnemy, SphereCollider attackRange)
+    {
+        // Calculate the distance between the attackRange's center and the closestEnemy's position
+        float distanceToEnemy = Vector3.Distance(attackRange.transform.position, closestEnemy.position);
 
+        // Check if the distance is less than the attackRange's radius
+        if (distanceToEnemy < attackRange.radius)
+        {
+            // The enemy is within the attack range
+            return true;
+        }
+        else
+        {
+            // The enemy is outside the attack range
+            return false;
+        }
+    }
+
+
+    private GameObject getClosestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemies");
+        GameObject closestEnemy = null;
+        float closestDistance = Mathf.Infinity;
+        Vector3 currentPosition = transform.position;
+
+        foreach (GameObject enemy in enemies)
+        {
+            float distanceToEnemy = Vector3.Distance(currentPosition, enemy.transform.position);
+            if (distanceToEnemy < closestDistance)
+            {
+                closestDistance = distanceToEnemy;
+                closestEnemy = enemy;
+            }
+        }
+
+        return closestEnemy;
     }
 
 
