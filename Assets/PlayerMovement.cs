@@ -53,7 +53,24 @@ public class PlayerMovement : MonoBehaviour
             rb.drag = 0;
         }
 
-        MovePlayer();
+        if (Input.GetButton("Fire1"))
+        {
+            // Run some code while the left mouse button is being held down
+            animator.SetBool("Idle", true);
+            animator.SetBool("Run Forward", false);
+
+
+            //set the animation to attack 
+
+            //also need to do damage to the enemy, so need to find closest enemy 
+
+            Debug.Log("Left mouse button is being held down");
+        } else
+        {
+            MovePlayer();
+        }
+
+
 
     }
 
