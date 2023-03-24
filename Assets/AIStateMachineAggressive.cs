@@ -11,6 +11,8 @@ public class AIStateMachineAggressive : MonoBehaviour
     public float speed = 1.0f; // speed of NPC movement
 
     public float attackCooldown = 2.0f;
+    bool canAttack = true;
+    bool deathHasStarted = false;
 
     public Transform bear;
     public SphereCollider detectionRadius;
@@ -18,11 +20,14 @@ public class AIStateMachineAggressive : MonoBehaviour
     public AIStatus status;
     public Animator animator;
 
+    string curAnimation;
+
     void Start()
     {
         target = transform.position + new Vector3(0, 0, distance); // set initial target position
         takeActionFromState(State.idle);
         status = GetComponent<AIStatus>();
+        curAnimation = "Idle";
     }
 
     void Update()
@@ -66,23 +71,78 @@ public class AIStateMachineAggressive : MonoBehaviour
         }
     }
 
+    void changeAnimation(string animation)
+    {
+        if (curAnimation == animation)
+        {
+            return;
+        } else
+        {
+            curAnimation = animation;
+            switch (animation)
+            {
+                case "Hide":
+                    animator.SetBool("Walk", false);
+                    animator.SetBool("Attack", false);
+                    animator.SetBool("Dead", false);
+                    animator.SetBool("Hide", true);
+                    break;
+                case "Walk":
+                    animator.SetBool("Hide", false);
+                    animator.SetBool("Attack", false);
+                    animator.SetBool("Dead", false);
+                    animator.SetBool("Walk", true);
+                    break;
+                case "Attack":
+                    animator.SetBool("Hide", false);
+                    animator.SetBool("Walk", false);
+                    animator.SetBool("Dead", false);
+                    animator.SetBool("Attack", true);
+                    break;
+                case "Dead":
+                    animator.SetBool("Hide", false);
+                    animator.SetBool("Walk", false);
+                    animator.SetBool("Attack", false);
+                    animator.SetBool("Dead", true);
+                    break;
+            }
+        }
+    }
+
     void die()
     {
-        Debug.Log("Has Died");
-        Destroy(gameObject, 4);
+        if (!deathHasStarted)
+        {
+            deathHasStarted = true;
+            Debug.Log("Has Died");
+            changeAnimation("Dead");
+
+            Destroy(gameObject, 4);
+        }
     }
 
     void attackbear()
     {
-        Debug.Log("Attacking Bear");
-        Vector3 direction = bear.position;
-        direction.y = 0;
-        transform.rotation = Quaternion.LookRotation(direction, transform.up);
+        if (canAttack)
+        {
+            canAttack = false;
+            changeAnimation("Attack");
+            Debug.Log("Attacking Bear");
+
+            transform.LookAt(bear);
+            Invoke(nameof(resetAttackCooldown), attackCooldown);
+        }
+    }
+
+    void resetAttackCooldown()
+    {
+        canAttack = true;
     }
 
 
     void runAway()
     {
+        changeAnimation("Walk");
         Vector3 direction = transform.position - bear.position;
         direction.y = 0;
 
@@ -91,11 +151,11 @@ public class AIStateMachineAggressive : MonoBehaviour
         speed = 2.0f;
         // Move away from the bear
         transform.position += direction.normalized * speed * Time.deltaTime;
-
     }
 
     void GoAroundInCircles()
     {
+        changeAnimation("Walk");
         // check if NPC has reached its target position
         if (Vector3.Distance(transform.position, target) < 0.1f)
         {

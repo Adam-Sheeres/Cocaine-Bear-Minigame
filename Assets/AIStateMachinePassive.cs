@@ -82,7 +82,6 @@ public class AIStateMachinePassive : MonoBehaviour
 
             Destroy(gameObject, 4);
         }
-
     }
 
     void hide()
