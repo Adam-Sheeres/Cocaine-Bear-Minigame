@@ -12,14 +12,13 @@ public class AIStatus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void sendMessage(string message, int value)
     {
         switch (message) {
             case "take damage":
-                Debug.Log("Taking Damage " + value.ToString());
                 healthPoints -= value;
                 break;
         }

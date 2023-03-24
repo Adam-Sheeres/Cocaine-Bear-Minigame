@@ -4,7 +4,7 @@ public class AIStateMachineAggressive : MonoBehaviour
 {
     private Vector3 target; // target position for NPC to move to
     private int direction = 1; // direction of movement, 1 = forward, 2 = right, 3 = backward, 4 = left
-    private enum State { idle, attack, reposition, runAway};
+    private enum State { idle, attack, reposition, runAway, dead};
     private Vector3 upDirection = Vector3.up;
 
     public float distance = 5.0f; // distance traveled by NPC in each direction of the square
@@ -15,11 +15,14 @@ public class AIStateMachineAggressive : MonoBehaviour
     public Transform bear;
     public SphereCollider detectionRadius;
     public SphereCollider attackRadius;
+    public AIStatus status;
+    public Animator animator;
 
     void Start()
     {
         target = transform.position + new Vector3(0, 0, distance); // set initial target position
         takeActionFromState(State.idle);
+        status = GetComponent<AIStatus>();
     }
 
     void Update()
@@ -28,7 +31,10 @@ public class AIStateMachineAggressive : MonoBehaviour
 
 
         //can see and not within the minimum attack radius, OK to attack 
-        if (inDetectionRadius() && !inAttackRadius())
+        if (status.healthPoints <= 0)
+        {
+            state = State.dead;
+        } else if (inDetectionRadius() && !inAttackRadius())
         {
             state = State.attack;
             //if the bear is inside the attack radius, we want to reposition
@@ -54,7 +60,16 @@ public class AIStateMachineAggressive : MonoBehaviour
         } else if (state == State.runAway)
         {
             runAway();
+        } else if (state == State.dead)
+        {
+            die();
         }
+    }
+
+    void die()
+    {
+        Debug.Log("Has Died");
+        Destroy(gameObject, 4);
     }
 
     void attackbear()

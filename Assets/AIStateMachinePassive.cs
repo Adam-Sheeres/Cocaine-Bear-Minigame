@@ -4,7 +4,7 @@ public class AIStateMachinePassive : MonoBehaviour
 {
     private Vector3 target; // target position for NPC to move to
     private int direction = 1; // direction of movement, 1 = forward, 2 = right, 3 = backward, 4 = left
-    private enum State { idle, hide, run};
+    private enum State { idle, hide, run, dead, scared };
     private Vector3 upDirection = Vector3.up;
 
     public float distance = 5.0f; // distance traveled by NPC in each direction of the square
@@ -12,18 +12,30 @@ public class AIStateMachinePassive : MonoBehaviour
 
     public Transform bear;
     public SphereCollider detectionRadius;
+    public SphereCollider bearTooClose;
+    public AIStatus status;
+    public Animator animator;
+
+    State state = State.idle;
+    bool deathHasStarted = false;
 
     void Start()
     {
         target = transform.position + new Vector3(0, 0, distance); // set initial target position
+        status = GetComponent<AIStatus>();
     }
 
     void Update()
     {
-        State state;
-        state = State.idle;
 
-        if (bearAround())
+        if (status.healthPoints <= 0)
+        {
+            state = State.dead;
+        } else if (isBearTooClose())
+        {
+            //play dead
+            state = State.scared;
+        } else if (bearAround())
         {
             state = State.run;
         } else if (!bearAround())
@@ -45,18 +57,44 @@ public class AIStateMachinePassive : MonoBehaviour
             hide();
         } else if (state == State.run) {
             runAway();
+        } else if (state == State.dead)
+        {
+            die();
+        } else if (state == State.scared)
+        {
+            hide();
         }
+    }
+
+    void die()
+    {
+        if (!deathHasStarted)
+        {
+            Debug.Log("Has Died");
+            animator.SetBool("Walk", false);
+            animator.SetBool("Hide", false);
+            animator.SetBool("Dead", true);
+
+            if (status.hasCocaine)
+            {
+                //spawn a new game component that has a cocaine script attached to it TODO
+            }
+
+            Destroy(gameObject, 4);
+        }
+
     }
 
     void hide()
     {
-        //just want to stay still and play a crounch animation
-
-        //also want to consider going to a hiding spot 
+        animator.SetBool("Walk", false);
+        animator.SetBool("Hide", true);
     }
 
     void runAway()
     {
+        animator.SetBool("Hide", false);
+        animator.SetBool("Walk", true);
         Vector3 direction = transform.position - bear.position;
         direction.y = 0;
 
@@ -65,12 +103,13 @@ public class AIStateMachinePassive : MonoBehaviour
         speed = 2.0f;
         // Move away from the bear
         transform.position += direction.normalized * speed * Time.deltaTime;
-
     }
 
     void GoAroundInCircles()
     {
         // check if NPC has reached its target position
+        animator.SetBool("Hide", false);
+        animator.SetBool("Walk", true);
         if (Vector3.Distance(transform.position, target) < 0.1f)
         {
             // update direction of movement
@@ -106,7 +145,7 @@ public class AIStateMachinePassive : MonoBehaviour
     bool bearAround()
     {
         // Check if the bear is inside the detection radius of the object's collider
-        if (Vector3.Distance(transform.position, bear.position) <= GetComponent<SphereCollider>().radius)
+        if (Vector3.Distance(transform.position, bear.position) <= detectionRadius.radius)
         {
             // The bear is inside the detection radius
             return true;
@@ -114,6 +153,17 @@ public class AIStateMachinePassive : MonoBehaviour
         else
         {
             // The bear is outside the detection radius
+            return false;
+        }
+    }
+
+    bool isBearTooClose()
+    {
+        if (Vector3.Distance(transform.position, bear.position) <= bearTooClose.radius)
+        {
+            return true;    
+        } else
+        {
             return false;
         }
     }

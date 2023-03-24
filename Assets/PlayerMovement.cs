@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
+    public float attackCooldown;
 
     [Header("Keybindings")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     float hInput;
     float vInput;
     bool readyToJump;
+    bool canAttack;
 
     Vector3 moveDirection;
 
@@ -39,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
         rb.freezeRotation = true;
         readyToJump = true;
         animator.SetBool("Idle", true);
+        canAttack = true;
     }
 
     private void FixedUpdate()
@@ -57,18 +60,19 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-
-
-
         if (Input.GetButton("Fire1"))
         {
+            animator.SetBool("Run Forward", false);
+            animator.SetBool("Idle", false);
             animator.SetBool("Attack", true);
 
             GameObject closestEnemy = getClosestEnemy();
 
             //if in range 
-            if (IsEnemyInAttackRange(closestEnemy.transform, attackRange))
+            if (IsEnemyInAttackRange(closestEnemy.transform, attackRange) && canAttack)
             {
+                canAttack = false;
+                Invoke(nameof(resetAttack), attackCooldown);
                 AIStatus aiStatus = closestEnemy.GetComponent<AIStatus>();
                 aiStatus.sendMessage("take damage", 1);
             }
@@ -78,6 +82,11 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("Attack", false);
             MovePlayer();
         }
+    }
+
+    void resetAttack()
+    {
+        canAttack = true;
     }
 
 
