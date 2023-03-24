@@ -7,6 +7,14 @@ You play as the bear from the movie "Cocaine Bear" in a mini-game to collect all
 who seek to claim the cocaine as their own. Youn will be faced with different challenges while trying to collect all the bags before your 'fuel' runs out and you get sleepy! 
 
 # Changelog
+2023-03-24
+- Added NPC animations
+- Fixed bear attacking animations 
+- Temporarily removed jumping for bear 
+- Added bag of cocaine to the back of one NPC 
+
+
+2023-03-10
 - Added Trees
 - Added "Areas" which have cocaine in them for the bear
 - Added run animation
