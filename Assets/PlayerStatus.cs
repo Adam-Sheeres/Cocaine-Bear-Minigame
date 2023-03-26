@@ -27,6 +27,9 @@ public class PlayerStatus : MonoBehaviour
         {
             cocainePoints += 50.0f;
             Debug.Log("Got powerup! Cocaine points: " + cocainePoints);
+        } else if (message == "take damage")
+        {
+            TakeDamage(2.0f);
         }
         else
         {

@@ -22,6 +22,8 @@ public class AIStateMachineAggressive : MonoBehaviour
 
     string curAnimation;
 
+    [SerializeField] private Transform pfBullet;
+
     void Start()
     {
         target = transform.position + new Vector3(0, 0, distance); // set initial target position
@@ -123,15 +125,29 @@ public class AIStateMachineAggressive : MonoBehaviour
 
     void attackbear()
     {
+        transform.LookAt(bear);
         if (canAttack)
         {
+            //spawn bullet for the shooting
+            playerShootProjectile();
             canAttack = false;
             changeAnimation("Attack");
             Debug.Log("Attacking Bear");
 
-            transform.LookAt(bear);
+            
             Invoke(nameof(resetAttackCooldown), attackCooldown);
         }
+    }
+
+    void playerShootProjectile()
+    {
+        Vector3 spawnPos = transform.position + transform.forward * 1.0f;
+        Vector3 bearPos = bear.transform.position;
+        Transform bulletTransform = Instantiate(pfBullet, spawnPos, Quaternion.identity);
+        
+        Vector3 shootDir = (bearPos - spawnPos).normalized;
+        bulletTransform.GetComponent<Bullet>().setup(shootDir);
+    
     }
 
     void resetAttackCooldown()

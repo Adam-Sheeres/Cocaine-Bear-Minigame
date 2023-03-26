@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform orientation;
     public Animator animator;
     public SphereCollider attackRange;
+    public SphereCollider hitbox;
 
     float hInput;
     float vInput;
