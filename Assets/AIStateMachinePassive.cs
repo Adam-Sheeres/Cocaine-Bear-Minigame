@@ -23,6 +23,12 @@ public class AIStateMachinePassive : MonoBehaviour
     {
         target = transform.position + new Vector3(0, 0, distance); // set initial target position
         status = GetComponent<AIStatus>();
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            // Do something with the player object
+            bear = player.transform;
+        }
     }
 
     void Update()

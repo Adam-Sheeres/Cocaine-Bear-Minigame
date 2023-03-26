@@ -30,6 +30,12 @@ public class AIStateMachineAggressive : MonoBehaviour
         takeActionFromState(State.idle);
         status = GetComponent<AIStatus>();
         curAnimation = "Idle";
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            // Do something with the player object
+            bear = player.transform;
+        }
     }
 
     void Update()
