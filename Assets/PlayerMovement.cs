@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform orientation;
     public Animator animator;
     public SphereCollider attackRange;
+    public PlayerStatus status;
 
     float hInput;
     float vInput;
@@ -151,13 +152,24 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = orientation.forward * vInput + orientation.right * hInput;
         moveDirection.y = 0.0f; // Prevent movement in the y-axis
 
+        // Check if the player is holding down the shift key and set the move speed accordingly
+        float currentMoveSpeed = moveSpeed;
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            currentMoveSpeed *= 1.5f; // Double the move speed if shift is held down
+            status.setCocaineDrainRate(5.0f);
+        } else
+        {
+            status.setCocaineDrainRate(2.5f);
+        }
+
         // Move the player using the transform class instead of adding forces to the rigid body
-        transform.position += moveDirection.normalized * moveSpeed * Time.deltaTime;
+        transform.position += moveDirection.normalized * currentMoveSpeed * Time.deltaTime;
 
         // If the player is not on the ground, apply air multiplier to the movement
         if (!grounded)
         {
-            transform.position += moveDirection.normalized * moveSpeed * airMultiplier * Time.deltaTime;
+            transform.position += moveDirection.normalized * currentMoveSpeed * airMultiplier * Time.deltaTime;
         }
 
         // Check if the player is moving horizontally
@@ -166,8 +178,8 @@ public class PlayerMovement : MonoBehaviour
         // Set the 'run forward' animation to true if the player is moving, otherwise set it to false and set 'idle' animation to true
         animator.SetBool("Run Forward", isMoving);
         animator.SetBool("Idle", !isMoving);
-
     }
+
 
 
     private void SpeedControl()

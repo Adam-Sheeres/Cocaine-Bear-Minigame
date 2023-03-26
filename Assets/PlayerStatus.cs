@@ -8,7 +8,7 @@ public class PlayerStatus : MonoBehaviour
     public HealthBarScript healthBar; 
 
     [Header("Cocaine Settings")]
-    public float cocaineDecreaseRate = 5.0f;
+    public float cocaineDecreaseRate = 2.5f;
     public float sleepThreshold = 0.0f;
     public HealthBarScript cocaineBar;
 
@@ -19,6 +19,16 @@ public class PlayerStatus : MonoBehaviour
         // Initialize the cocaine meter.
         cocainePoints = Mathf.Clamp(cocainePoints, 0.0f, cocainePoints);
         healthBar.SetMaxHealth(healthPoints);
+    }
+
+    public void setCocaineDrainRate(float rate)
+    {
+        
+        if (rate == 0)
+        {
+            cocaineDecreaseRate = 2.5f;
+        }
+        cocaineDecreaseRate = rate;
     }
 
     public void sendMessage(string message)
@@ -36,6 +46,7 @@ public class PlayerStatus : MonoBehaviour
             Debug.Log("Unknown message: " + message);
         }
     }
+
     private void Update()
     {
         // Decrease the cocaine meter over time.
