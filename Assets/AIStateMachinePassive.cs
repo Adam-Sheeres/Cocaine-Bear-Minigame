@@ -86,7 +86,7 @@ public class AIStateMachinePassive : MonoBehaviour
                 //spawn a new game component that has a cocaine script attached to it TODO
             }
 
-            Destroy(gameObject, 4);
+            Destroy(gameObject, 2.0f);
         }
     }
 

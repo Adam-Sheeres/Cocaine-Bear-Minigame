@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     float vInput;
     bool readyToJump;
     bool canAttack;
+    bool endGameStarted = false;
 
     Vector3 moveDirection;
 
@@ -50,39 +51,77 @@ public class PlayerMovement : MonoBehaviour
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         MyInput();
 
-        if (grounded)
+        if (status.healthPoints <= 0.0f) //health points 0
         {
-            rb.drag = groundDrag;
-            animator.SetBool("Jumping", false);
-        }
-        else
-        {
-            rb.drag = 0;
-        }
-
-
-        if (Input.GetButton("Fire1"))
-        {
-            animator.SetBool("Run Forward", false);
-            animator.SetBool("Idle", false);
-            animator.SetBool("Attack", true);
-
-            GameObject closestEnemy = getClosestEnemy();
-
-            //if in range 
-            if (IsEnemyInAttackRange(closestEnemy.transform, attackRange) && canAttack)
+            if (!endGameStarted)
             {
-                canAttack = false;
-                Invoke(nameof(resetAttack), attackCooldown);
-                AIStatus aiStatus = closestEnemy.GetComponent<AIStatus>();
-                aiStatus.sendMessage("take damage", 1);
+                endGameStarted = true;
+                //die -> Game over 
+                animator.SetBool("Run Forward", false);
+                animator.SetBool("Idle", false);
+                animator.SetBool("Attack", false);
+                animator.SetBool("Death", true);
+
+                endGame();
+            }
+
+            //start game over sequence 
+        } else if (status.cocainePoints <= 0.0f) //cocaine points 0
+        {
+            if (!endGameStarted)
+            {
+                endGameStarted = true;
+                //sleep -> Game over 
+                animator.SetBool("Run Forward", false);
+                animator.SetBool("Idle", false);
+                animator.SetBool("Attack", false);
+                animator.SetBool("Sleep", true);
+
+                endGame();
             }
         }
+        
         else
         {
-            animator.SetBool("Attack", false);
-            MovePlayer();
+            if (grounded)
+            {
+                rb.drag = groundDrag;
+                animator.SetBool("Jumping", false);
+            }
+            else
+            {
+                rb.drag = 0;
+            }
+
+
+            if (Input.GetButton("Fire1"))
+            {
+                animator.SetBool("Run Forward", false);
+                animator.SetBool("Idle", false);
+                animator.SetBool("Attack", true);
+
+                GameObject closestEnemy = getClosestEnemy();
+
+                //if in range 
+                if (IsEnemyInAttackRange(closestEnemy.transform, attackRange) && canAttack)
+                {
+                    canAttack = false;
+                    Invoke(nameof(resetAttack), attackCooldown);
+                    AIStatus aiStatus = closestEnemy.GetComponent<AIStatus>();
+                    aiStatus.sendMessage("take damage", 1);
+                }
+            }
+            else
+            {
+                animator.SetBool("Attack", false);
+                MovePlayer();
+            }
         }
+    }
+
+    void endGame()
+    {
+        FindObjectOfType<GameManager>().EndGame();
     }
 
     void resetAttack()

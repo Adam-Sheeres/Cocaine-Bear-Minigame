@@ -12,7 +12,8 @@ public class PlayerStatus : MonoBehaviour
     public float sleepThreshold = 0.0f;
     public HealthBarScript cocaineBar;
 
-    private bool isSleeping = false;
+    [Header("Points")]
+    public int points = 0;
 
     private void Start()
     {
@@ -40,8 +41,10 @@ public class PlayerStatus : MonoBehaviour
         } else if (message == "take damage")
         {
             TakeDamage(2.0f);
-        }
-        else
+        } else if (message == "add point")
+        {
+            points++;
+        } else
         {
             Debug.Log("Unknown message: " + message);
         }
@@ -54,33 +57,11 @@ public class PlayerStatus : MonoBehaviour
 
         healthBar.setHealth(healthPoints);
         cocaineBar.setHealth(cocainePoints);
-
-        // Check if the cocaine meter has reached the sleep threshold.
-        if (cocainePoints <= sleepThreshold && !isSleeping)
-        {
-            // Call the sleep function.
-            outOfCocaine();
-        }
     }
 
     void TakeDamage(float damage)
     {
         healthPoints -= damage;
         
-    }
-
-    private void outOfCocaine()
-    {
-        // Set the player to sleep.
-        isSleeping = true;
-
-        // TODO: Implement sleep functionality here.
-        Debug.Log("Cocaine level at 0");
-
-        // Reset the cocaine meter.
-        cocainePoints = 100.0f;
-
-        // Wake the player up.
-        isSleeping = false;
     }
 }

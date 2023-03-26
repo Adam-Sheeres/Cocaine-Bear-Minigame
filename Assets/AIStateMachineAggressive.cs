@@ -125,7 +125,7 @@ public class AIStateMachineAggressive : MonoBehaviour
             Debug.Log("Has Died");
             changeAnimation("Dead");
 
-            Destroy(gameObject, 4);
+            Destroy(gameObject, 2.0f);
         }
     }
 
