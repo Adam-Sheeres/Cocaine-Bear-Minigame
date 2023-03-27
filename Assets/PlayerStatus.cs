@@ -5,7 +5,8 @@ public class PlayerStatus : MonoBehaviour
     [Header("Status")]
     public float healthPoints = 100.0f;
     public float cocainePoints = 100.0f;
-    public HealthBarScript healthBar; 
+    public HealthBarScript healthBar;
+    public PointsScript pointsScript;
 
     [Header("Cocaine Settings")]
     public float cocaineDecreaseRate = 2.5f;
@@ -37,14 +38,25 @@ public class PlayerStatus : MonoBehaviour
         if (message == "powerup")
         {
             cocainePoints += 50.0f;
-            Debug.Log("Got powerup! Cocaine points: " + cocainePoints);
+            if (cocainePoints > 100.0f) cocainePoints = 100.0f;
+            points++;
+
         } else if (message == "take damage")
         {
             TakeDamage(2.0f);
         } else if (message == "add point")
         {
             points++;
-        } else
+        } else if (message == "add health")
+        {
+            healthPoints += 25;
+            if (healthPoints > 100)
+            {
+                healthPoints = 100;
+            }
+        }
+        
+        else
         {
             Debug.Log("Unknown message: " + message);
         }
@@ -57,6 +69,7 @@ public class PlayerStatus : MonoBehaviour
 
         healthBar.setHealth(healthPoints);
         cocaineBar.setHealth(cocainePoints);
+        pointsScript.setPoints(points);
     }
 
     void TakeDamage(float damage)

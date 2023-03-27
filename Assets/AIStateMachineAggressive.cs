@@ -122,10 +122,22 @@ public class AIStateMachineAggressive : MonoBehaviour
         if (!deathHasStarted)
         {
             deathHasStarted = true;
-            Debug.Log("Has Died");
             changeAnimation("Dead");
 
-            Destroy(gameObject, 2.0f);
+            // Get a reference to the Rigidbody component
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
+
+            // Disable gravity on the Rigidbody
+            rigidbody.useGravity = false;
+
+
+            // Get a reference to the Capsule Collider component
+            CapsuleCollider capsuleCollider = GetComponent<CapsuleCollider>();
+
+            // Disable the Capsule Collider component
+            capsuleCollider.enabled = false;
+
+
         }
     }
 
@@ -138,7 +150,6 @@ public class AIStateMachineAggressive : MonoBehaviour
             playerShootProjectile();
             canAttack = false;
             changeAnimation("Attack");
-            Debug.Log("Attacking Bear");
 
             
             Invoke(nameof(resetAttackCooldown), attackCooldown);

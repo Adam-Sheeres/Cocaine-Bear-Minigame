@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     bool readyToJump;
     bool canAttack;
     bool endGameStarted = false;
+    bool animLock = false; 
 
     Vector3 moveDirection;
 
@@ -48,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        GameObject closestEnemy = getClosestEnemy();
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         MyInput();
 
@@ -93,14 +95,12 @@ public class PlayerMovement : MonoBehaviour
                 rb.drag = 0;
             }
 
-
+            //attack
             if (Input.GetButton("Fire1"))
             {
                 animator.SetBool("Run Forward", false);
                 animator.SetBool("Idle", false);
                 animator.SetBool("Attack", true);
-
-                GameObject closestEnemy = getClosestEnemy();
 
                 //if in range 
                 if (IsEnemyInAttackRange(closestEnemy.transform, attackRange) && canAttack)
@@ -110,13 +110,38 @@ public class PlayerMovement : MonoBehaviour
                     AIStatus aiStatus = closestEnemy.GetComponent<AIStatus>();
                     aiStatus.sendMessage("take damage", 1);
                 }
+            } else if (Input.GetKeyDown(KeyCode.E))
+            {
+                //if there is a dead body near you 
+                if (IsEnemyInAttackRange(closestEnemy.transform, attackRange))
+                {
+                    AIStatus aiStatus = closestEnemy.transform.GetComponent<AIStatus>();
+                    if (aiStatus.healthPoints <= 0.0f) //this is a dead body
+                    {
+                        animator.SetBool("Attack", false);
+                        animator.SetBool("Eat", true);
+                        animator.SetBool("Idle", false);
+                        animLock = true;
+                        aiStatus.sendMessage("being eaten", 0);
+                        Invoke("ResetEat", 4.0f);
+                    }
+                }
             }
-            else
+            else if (!animLock)
             {
                 animator.SetBool("Attack", false);
                 MovePlayer();
             }
+
         }
+    }
+
+    void ResetEat()
+    {
+        animator.SetBool("Eat", false);
+        animLock = false;
+        status.sendMessage("add health");
+        status.sendMessage("add point");
     }
 
     void endGame()

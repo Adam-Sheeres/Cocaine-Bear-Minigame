@@ -76,17 +76,25 @@ public class AIStateMachinePassive : MonoBehaviour
     {
         if (!deathHasStarted)
         {
-            Debug.Log("Has Died");
+            deathHasStarted = true;
             animator.SetBool("Walk", false);
             animator.SetBool("Hide", false);
             animator.SetBool("Dead", true);
 
-            if (status.hasCocaine)
-            {
-                //spawn a new game component that has a cocaine script attached to it TODO
-            }
+            // Get a reference to the Rigidbody component
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
 
-            Destroy(gameObject, 2.0f);
+            // Disable gravity on the Rigidbody
+            rigidbody.useGravity = false;
+
+
+            // Get a reference to the Capsule Collider component
+            CapsuleCollider capsuleCollider = GetComponent<CapsuleCollider>();
+
+            // Disable the Capsule Collider component
+            capsuleCollider.enabled = false;
+
+
         }
     }
 

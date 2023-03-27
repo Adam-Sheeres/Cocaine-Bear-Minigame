@@ -20,6 +20,9 @@ public class AIStatus : MonoBehaviour
         switch (message) {
             case "take damage":
                 healthPoints -= value;
+            break;
+            case "being eaten":
+                Destroy(gameObject, 10.0f);
                 break;
         }
         
