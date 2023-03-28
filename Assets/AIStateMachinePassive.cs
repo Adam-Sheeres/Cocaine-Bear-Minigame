@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AIStateMachinePassive : MonoBehaviour
 {
     private Vector3 target; // target position for NPC to move to
     private int direction = 1; // direction of movement, 1 = forward, 2 = right, 3 = backward, 4 = left
-    private enum State { idle, hide, run, dead, scared };
+    private enum State { idle, Crouch, run, dead, scared };
     private Vector3 upDirection = Vector3.up;
 
     public float distance = 5.0f; // distance traveled by NPC in each direction of the square
@@ -15,6 +16,8 @@ public class AIStateMachinePassive : MonoBehaviour
     public SphereCollider bearTooClose;
     public AIStatus status;
     public Animator animator;
+
+    public AudioSource deathSound;
 
     State state = State.idle;
     bool deathHasStarted = false;
@@ -46,7 +49,7 @@ public class AIStateMachinePassive : MonoBehaviour
             state = State.run;
         } else if (!bearAround())
         {
-            state = State.hide;
+            state = State.Crouch;
         }
 
         takeActionFromState(state);
@@ -57,10 +60,14 @@ public class AIStateMachinePassive : MonoBehaviour
     {
         if (state == State.idle)
         {
-            GoAroundInCircles();
-        } else if (state == State.hide)
+            //do nothing
+            animator.SetBool("Hide", true);
+            animator.SetBool("Crouch", false);
+            animator.SetBool("Walk", false);
+            animator.SetBool("Idle", true);
+        } else if (state == State.Crouch)
         {
-            hide();
+            Crouch();
         } else if (state == State.run) {
             runAway();
         } else if (state == State.dead)
@@ -68,7 +75,7 @@ public class AIStateMachinePassive : MonoBehaviour
             die();
         } else if (state == State.scared)
         {
-            hide();
+            Scared();
         }
     }
 
@@ -77,9 +84,13 @@ public class AIStateMachinePassive : MonoBehaviour
         if (!deathHasStarted)
         {
             deathHasStarted = true;
-            animator.SetBool("Walk", false);
             animator.SetBool("Hide", false);
+            animator.SetBool("Crouch", false);
+            animator.SetBool("Walk", false);
+
             animator.SetBool("Dead", true);
+
+            deathSound.Play();
 
             // Get a reference to the Rigidbody component
             Rigidbody rigidbody = GetComponent<Rigidbody>();
@@ -98,15 +109,23 @@ public class AIStateMachinePassive : MonoBehaviour
         }
     }
 
-    void hide()
+    void Scared()
     {
         animator.SetBool("Walk", false);
         animator.SetBool("Hide", true);
     }
 
+    void Crouch()
+    {
+        animator.SetBool("Hide", false);
+        animator.SetBool("Walk", false);
+        animator.SetBool("Crouch", true);
+    }
+
     void runAway()
     {
         animator.SetBool("Hide", false);
+        animator.SetBool("Crouch", false);
         animator.SetBool("Walk", true);
         Vector3 direction = transform.position - bear.position;
         direction.y = 0;
@@ -116,43 +135,6 @@ public class AIStateMachinePassive : MonoBehaviour
         speed = 2.0f;
         // Move away from the bear
         transform.position += direction.normalized * speed * Time.deltaTime;
-    }
-
-    void GoAroundInCircles()
-    {
-        // check if NPC has reached its target position
-        animator.SetBool("Hide", false);
-        animator.SetBool("Walk", true);
-        if (Vector3.Distance(transform.position, target) < 0.1f)
-        {
-            // update direction of movement
-            direction++;
-            if (direction > 4) direction = 1;
-
-            // update target position based on new direction of movement
-            switch (direction)
-            {
-                case 1:
-                    target = transform.position + new Vector3(0, 0, distance);
-                    transform.LookAt(target);
-                    break;
-                case 2:
-                    target = transform.position + new Vector3(distance, 0, 0);
-                    transform.LookAt(target);
-                    break;
-                case 3:
-                    target = transform.position + new Vector3(0, 0, -distance);
-                    transform.LookAt(target);
-                    break;
-                case 4:
-                    target = transform.position + new Vector3(-distance, 0, 0);
-                    transform.LookAt(target);
-                    break;
-            }
-        }
-
-        // move NPC towards its target position
-        transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
     }
 
     bool bearAround()

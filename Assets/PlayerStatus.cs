@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -15,6 +16,12 @@ public class PlayerStatus : MonoBehaviour
 
     [Header("Points")]
     public int points = 0;
+
+    [Header("Sound Effects")]
+    public AudioSource deathSound;
+    public AudioSource hit_sound;
+    public AudioSource power_up_sound;
+    public AudioSource earned_points;
 
     private void Start()
     {
@@ -37,15 +44,18 @@ public class PlayerStatus : MonoBehaviour
     {
         if (message == "powerup")
         {
+            power_up_sound.Play();
             cocainePoints += 50.0f;
             if (cocainePoints > 100.0f) cocainePoints = 100.0f;
             points++;
 
         } else if (message == "take damage")
         {
-            TakeDamage(2.0f);
+            hit_sound.Play();
+            TakeDamage(8.0f);
         } else if (message == "add point")
         {
+            earned_points.Play();
             points++;
         } else if (message == "add health")
         {
@@ -66,6 +76,12 @@ public class PlayerStatus : MonoBehaviour
     {
         // Decrease the cocaine meter over time.
         cocainePoints = Mathf.Clamp(cocainePoints - cocaineDecreaseRate * Time.deltaTime, 0.0f, cocainePoints);
+
+        if (cocainePoints <= 5 && healthPoints >= 25)
+        {
+            cocainePoints = 5;
+            healthPoints = Mathf.Clamp(healthPoints - cocaineDecreaseRate * Time.deltaTime, 0.0f, healthPoints);
+        }
 
         healthBar.setHealth(healthPoints);
         cocaineBar.setHealth(cocainePoints);

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AIStateMachineAggressive : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class AIStateMachineAggressive : MonoBehaviour
     public Animator animator;
 
     string curAnimation;
+
+    public AudioSource deathSound;
 
     [SerializeField] private Transform pfBullet;
 
@@ -90,26 +93,26 @@ public class AIStateMachineAggressive : MonoBehaviour
             curAnimation = animation;
             switch (animation)
             {
-                case "Hide":
+                case "Crouch":
                     animator.SetBool("Walk", false);
                     animator.SetBool("Attack", false);
                     animator.SetBool("Dead", false);
-                    animator.SetBool("Hide", true);
+                    animator.SetBool("Crouch", true);
                     break;
                 case "Walk":
-                    animator.SetBool("Hide", false);
+                    animator.SetBool("Crouch", false);
                     animator.SetBool("Attack", false);
                     animator.SetBool("Dead", false);
                     animator.SetBool("Walk", true);
                     break;
                 case "Attack":
-                    animator.SetBool("Hide", false);
+                    animator.SetBool("Crouch", false);
                     animator.SetBool("Walk", false);
                     animator.SetBool("Dead", false);
                     animator.SetBool("Attack", true);
                     break;
                 case "Dead":
-                    animator.SetBool("Hide", false);
+                    animator.SetBool("Crouch", false);
                     animator.SetBool("Walk", false);
                     animator.SetBool("Attack", false);
                     animator.SetBool("Dead", true);
@@ -124,6 +127,8 @@ public class AIStateMachineAggressive : MonoBehaviour
         {
             deathHasStarted = true;
             changeAnimation("Dead");
+
+            deathSound.Play();
 
             // Get a reference to the Rigidbody component
             Rigidbody rigidbody = GetComponent<Rigidbody>();
@@ -204,24 +209,21 @@ public class AIStateMachineAggressive : MonoBehaviour
             {
                 case 1:
                     target = transform.position + new Vector3(0, 0, distance);
-                    transform.LookAt(target);
                     break;
                 case 2:
                     target = transform.position + new Vector3(distance, 0, 0);
-                    transform.LookAt(target);
                     break;
                 case 3:
                     target = transform.position + new Vector3(0, 0, -distance);
-                    transform.LookAt(target);
                     break;
                 case 4:
                     target = transform.position + new Vector3(-distance, 0, 0);
-                    transform.LookAt(target);
                     break;
             }
         }
 
         // move NPC towards its target position
+        transform.LookAt(target);
         transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
     }
 

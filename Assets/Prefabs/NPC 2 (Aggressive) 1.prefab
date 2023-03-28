@@ -108,13 +108,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 5
-  speed: 1
+  speed: 2
   attackCooldown: 1
   bear: {fileID: 0}
   detectionRadius: {fileID: 8590431204701902692}
   attackRadius: {fileID: 8590431204701902680}
   status: {fileID: 8590431204701902687}
   animator: {fileID: 5203194216677392402}
+  deathSound: {fileID: 0}
   pfBullet: {fileID: 5786435448705572979, guid: 2f88c82c2e5de4f4e92c6b3d0de9a398, type: 3}
 --- !u!114 &8590431204701902687
 MonoBehaviour:

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -26,13 +27,19 @@ public class PlayerMovement : MonoBehaviour
     public Animator animator;
     public SphereCollider attackRange;
     public PlayerStatus status;
+    public AudioSource jumpSound;
+    public AudioSource eatSound;
+    public AudioSource gameOver;
 
+    //private variables
     float hInput;
     float vInput;
     bool readyToJump;
     bool canAttack;
     bool endGameStarted = false;
     bool animLock = false; 
+
+
 
     Vector3 moveDirection;
 
@@ -64,6 +71,8 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool("Attack", false);
                 animator.SetBool("Death", true);
 
+                gameOver.Play();
+
                 endGame();
             }
 
@@ -78,6 +87,8 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool("Idle", false);
                 animator.SetBool("Attack", false);
                 animator.SetBool("Sleep", true);
+
+                gameOver.Play();
 
                 endGame();
             }
@@ -121,9 +132,10 @@ public class PlayerMovement : MonoBehaviour
                         animator.SetBool("Attack", false);
                         animator.SetBool("Eat", true);
                         animator.SetBool("Idle", false);
+                        eatSound.Play();
                         animLock = true;
                         aiStatus.sendMessage("being eaten", 0);
-                        Invoke("ResetEat", 4.0f);
+                        Invoke("ResetEat", 3.0f);
                     }
                 }
             }
@@ -206,7 +218,7 @@ public class PlayerMovement : MonoBehaviour
             readyToJump = false;
 
             Jump();
-
+            jumpSound.Play();
             Invoke(nameof(resetJump), jumpCooldown); //jump cooldown
         }
     }

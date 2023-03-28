@@ -94,12 +94,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 5
-  speed: 1
+  speed: 2
   bear: {fileID: 0}
   detectionRadius: {fileID: 504726703840153952}
   bearTooClose: {fileID: 504726703840153954}
   status: {fileID: 504726703840153955}
   animator: {fileID: 4036074619481143347}
+  deathSound: {fileID: 0}
 --- !u!114 &504726703840153955
 MonoBehaviour:
   m_ObjectHideFlags: 0
