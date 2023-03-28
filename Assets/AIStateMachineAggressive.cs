@@ -86,6 +86,7 @@ public class AIStateMachineAggressive : MonoBehaviour
             return;
         } else
         {
+            Debug.Log("Switching");
             curAnimation = animation;
             switch (animation)
             {
@@ -144,12 +145,14 @@ public class AIStateMachineAggressive : MonoBehaviour
     void attackbear()
     {
         transform.LookAt(bear);
+        changeAnimation("Attack");
+
         if (canAttack)
         {
             //spawn bullet for the shooting
             playerShootProjectile();
             canAttack = false;
-            changeAnimation("Attack");
+            
 
             
             Invoke(nameof(resetAttackCooldown), attackCooldown);
