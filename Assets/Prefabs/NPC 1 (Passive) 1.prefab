@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 5
-  speed: 2
+  speed: 5
   bear: {fileID: 0}
   detectionRadius: {fileID: 504726703840153952}
   bearTooClose: {fileID: 504726703840153954}
