@@ -10318,10 +10318,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a57b1ab71b24d4499906998d563e72a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 0}
-  player: {fileID: 0}
-  gameObj: {fileID: 0}
-  rb: {fileID: 0}
+  orientation: {fileID: 1137682958}
+  player: {fileID: 1577730616}
+  gameObj: {fileID: 1376740857}
+  rb: {fileID: 1577730615}
   rotationSpeed: 7
 --- !u!1001 &970166953
 PrefabInstance:
@@ -18403,7 +18403,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1554604215}
-  m_LocalRotation: {x: 0.21787344, y: -0.7010359, z: 0.24053088, w: 0.6349998}
+  m_LocalRotation: {x: 0.21787336, y: -0.7010359, z: 0.24053085, w: 0.6349999}
   m_LocalPosition: {x: -0.000011223735, y: 0, z: -0.000002789332}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
