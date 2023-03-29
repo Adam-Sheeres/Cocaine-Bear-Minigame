@@ -7,6 +7,14 @@ You play as the bear from the movie "Cocaine Bear" in a mini-game to collect all
 who seek to claim the cocaine as their own. Youn will be faced with different challenges while trying to collect all the bags before your 'fuel' runs out and you get sleepy! 
 
 # Changelog
+2023-03-28
+- Fixed tree rendering
+- Added a cave
+- Improved cocaine numbers and stuff
+- Added more areas 
+- Fixed passive NPC animations 
+
+
 2023-03-24
 - Added NPC animations
 - Fixed bear attacking animations 
@@ -22,3 +30,7 @@ who seek to claim the cocaine as their own. Youn will be faced with different ch
 
 Bear
 ![Untitled video - Made with Clipchamp](https://user-images.githubusercontent.com/42977493/222464684-c7bf6fe1-18a3-46a0-a0d3-bdc3e493e439.gif)
+
+# YouTube Link
+https://youtu.be/JtUrHOu6g48
+
