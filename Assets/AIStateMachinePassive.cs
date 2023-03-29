@@ -39,7 +39,7 @@ public class AIStateMachinePassive : MonoBehaviour
     void Update()
     {
 
-        //Debug.Log(inStartingPos());
+        Debug.Log(inStartingPos());
 
         if (status.healthPoints <= 0)
         {
@@ -57,6 +57,7 @@ public class AIStateMachinePassive : MonoBehaviour
         } else if (!bearAround() && cantReturn)
         {
             state = State.Crouch;
+            cantReturn = true;
             Invoke("resetReturn", 5.0f);
         } else if (!cantReturn && !inStartingPos())// if you can return and you are not in the starting position
         {
@@ -92,6 +93,7 @@ public class AIStateMachinePassive : MonoBehaviour
 
     void takeActionFromState(State state)
     {
+        Debug.Log(state);
         if (state == State.idle)
         {
             //do nothing
@@ -209,7 +211,6 @@ public class AIStateMachinePassive : MonoBehaviour
     bool inStartingPos()
     {
         float distance = Vector3.Distance(startingPos, transform.position);
-        Debug.Log("Distance: " + distance.ToString());
         // Check if the distance is less than or equal to 1
         if (distance <= 1.0f)
         {
